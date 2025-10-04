@@ -37,18 +37,18 @@ public class KafkaMessageProducer {
   }
 
   public void sendMesageWithKey(String message, String key) {
-    log.info("Enviando mensagem: '{}' com a chabe '{}' para o tópico '{}'", message, key, topicName);
+    log.info("Enviando mensagem: '{}' com a chave '{}' para o tópico '{}'", message, key, topicName);
     CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topicName, key, message);
     future.whenComplete((result, ex) -> {
       if (ex == null) {
         log.info("Mensagem com chave '{}' enviada com sucesso para o tópico '{}' particao '{}' com offset '{}'",
             key,
-            // result.getRecordMetadata().key(),
+//            result.getProducerRecord().key(),
             result.getRecordMetadata().topic(),
             result.getRecordMetadata().partition(),
             result.getRecordMetadata().offset());
       } else {
-        log.error("Faha ao enviar mensagem com chave '{}' para o tópico '{}': '{}'", topicName, key, ex.getMessage());
+        log.error("Falha ao enviar mensagem com chave '{}' para o tópico '{}': {}", topicName, key, ex.getMessage());
       }
     });
   }
